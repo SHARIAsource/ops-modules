@@ -1,0 +1,69 @@
+name: Integrate
+on:
+  push:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+env:
+  MODULES: modules
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  integrate_modules:
+    name: 'Integrate Modules'
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: create-caches
+        run: |
+          mkdir -p ~/${{ env.TFLINT_PLUGIN_CACHE }}
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/${{ env.TFLINT_PLUGIN_CACHE }}
+          key: ${{ runner.os }}-tflint-${{ hashFiles('**/.tflint.hcl') }}
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt@v1
+        with:
+          path: ${{ env.MODULES }}
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        with:
+          path: ${{ env.MODULES }}
+
+      - uses: terraform-linters/setup-tflint@v4
+        name: Setup TFLint
+        with:
+          tflint_version: v0.50.3
+
+      - run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: tflint
+        run: tflint -f compact
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+
+      - uses: terraform-docs/gh-actions@v1.1.0
+        with:
+          find-dir: ${{ env.MODULES }}
+          output-file: README.md
+          output-method: inject
+          git-push: "false"
+          recursive-path: ${{ env.MODULES }}
