@@ -1,17 +1,22 @@
 # Resources for the AWS OIDC Terraform module.
 
 locals {
-  url         = "https://token.actions.githubusercontent.com"
-  harvard_url = "https://token.actions.githubusercontent.com/harvard-university"
-}
-
-data "tls_certificate" "github" {
-  url = var.environment == "development" ? local.url : local.harvard_url
+  gh_path      = "token.actions.githubusercontent.com"
+  harvard_path = "token.actions.githubusercontent.com/harvard-university"
+  role_name    = "${var.key}-${var.gha_oidc_role_name}-${var.environment}"
+  thumbprint   = data.tls_certificate.github.certificates[0].sha1_fingerprint
 }
 
 locals {
-  role_name  = "${var.key}-${var.gha_oidc_role_name}-${var.environment}"
-  thumbprint = data.tls_certificate.github.certificates[0].sha1_fingerprint
+  path = var.environment == "development" ? local.gh_path : local.harvard_path
+}
+
+locals {
+  url = "https://${local.path}"
+}
+
+data "tls_certificate" "github" {
+  url = local.url
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -39,13 +44,13 @@ data "aws_iam_policy_document" "this" {
 
     condition {
       test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
+      variable = "${local.path}:aud"
       values   = ["sts.amazonaws.com"]
     }
 
     condition {
       test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:sub"
+      variable = "${local.path}:sub"
       values = concat(
         [
           for item in var.oidc_allowed :
