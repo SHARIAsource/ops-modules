@@ -42,7 +42,7 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_security_group" "this" {
-  description = "Allows inbound access from ECS only."
+  description = "Security group for the RDS instance."
   name        = "${var.key}-security-group-postgres-${var.environment}"
   vpc_id      = var.vpc_id
 
