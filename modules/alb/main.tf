@@ -1,8 +1,8 @@
 # Resources for the AWS ALB Terraform module.
 
 resource "aws_security_group" "alb" {
-  name        = "${var.key}-security-group-alb-${var.environment}"
   description = "Controls access to the ALB."
+  name_prefix = "${var.key}-security-group-alb-${var.environment}"
   vpc_id      = var.vpc_id
 
   lifecycle {
