@@ -108,6 +108,7 @@ data "aws_iam_policy_document" "jump_host_policy_ssm" {
       "ssmmessages:OpenControlChannel",
       "ssmmessages:OpenDataChannel",
     ]
+    # tfsec:ignore:aws-iam-no-policy-wildcards
     resources = ["*"]
   }
 }
