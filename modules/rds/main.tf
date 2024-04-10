@@ -43,7 +43,7 @@ resource "aws_db_subnet_group" "this" {
 
 resource "aws_security_group" "this" {
   description = "Security group for the RDS instance."
-  name_prefix = "${var.key}-security-group-postgres-${var.environment}"
+  name_prefix = "${var.key}-security-group-postgres-${var.environment}-"
   vpc_id      = var.vpc_id
 
   lifecycle {

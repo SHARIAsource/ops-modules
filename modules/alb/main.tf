@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "alb" {
   description = "Controls access to the ALB."
-  name_prefix = "${var.key}-security-group-alb-${var.environment}"
+  name_prefix = "${var.key}-security-group-alb-${var.environment}-"
   vpc_id      = var.vpc_id
 
   lifecycle {

@@ -223,7 +223,7 @@ resource "aws_autoscaling_group" "jump_host" {
 
 resource "aws_security_group" "jump_host" {
   description = "Security group for the ec2 jump host."
-  name_prefix = "${var.key}-security-group-jump-host-${var.environment}"
+  name_prefix = "${var.key}-security-group-jump-host-${var.environment}-"
   vpc_id      = var.vpc_id
 
   lifecycle {
