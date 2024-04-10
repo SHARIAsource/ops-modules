@@ -69,10 +69,19 @@ resource "aws_iam_role" "jump_host_role" {
 data "aws_iam_policy_document" "jump_host_policy_ssm" {
   statement {
     actions = [
-      "kms:Decrypt"
+      "kms:Decrypt",
     ]
     resources = [
       aws_kms_key.ssm_key.arn,
+    ]
+  }
+
+  statement {
+    actions = [
+      "ec2messages:GetMessages",
+    ]
+    resources = [
+      "arn:aws:ssm:*:${var.aws_account}:*",
     ]
   }
 
@@ -91,11 +100,13 @@ data "aws_iam_policy_document" "jump_host_policy_ssm" {
 
   statement {
     actions = [
+      "ssm:ListAssociations",
+      "ssm:ListInstanceAssociations",
       "ssm:UpdateInstanceInformation",
       "ssmmessages:CreateControlChannel",
       "ssmmessages:CreateDataChannel",
       "ssmmessages:OpenControlChannel",
-      "ssmmessages:OpenDataChannel"
+      "ssmmessages:OpenDataChannel",
     ]
     resources = ["*"]
   }
