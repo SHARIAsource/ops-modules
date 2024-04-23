@@ -35,7 +35,8 @@ resource "aws_security_group" "this" {
 }
 
 locals {
-  launch_template = "${var.key}-${var.name}-${var.environment}"
+  launch_template           = "${var.key}-${var.name}-${var.environment}"
+  default_security_group_id = aws_security_group.this[0].id
 }
 
 resource "aws_launch_template" "this" {
@@ -57,7 +58,7 @@ resource "aws_launch_template" "this" {
     content {
       associate_public_ip_address = ni.value.associate_public_ip_address
       delete_on_termination       = ni.value.delete_on_termination
-      security_groups             = try(ni.value.security_groups, [aws_security_group.this.id])
+      security_groups             = try(ni.value.security_groups, [local.default_security_group_id])
       subnet_id                   = try(ni.value.subnet_id, null)
     }
   }
