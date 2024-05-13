@@ -19,7 +19,7 @@ resource "aws_security_group" "this" {
   count = var.create_security_group ? 1 : 0
 
   description = "Security group for the ec2 instance."
-  name_prefix = "${var.key}-security-group-ec2-${var.environment}-"
+  name_prefix = "${var.key}-security-group-ec2-${var.name}-${var.environment}-"
   vpc_id      = var.vpc_id
 
   lifecycle {
@@ -27,7 +27,7 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name        = "${var.key}-security-group-ec2-${var.environment}"
+    Name        = "${var.key}-security-group-ec2-${var.name}-${var.environment}"
     Environment = var.environment
     Project     = var.project
     Service     = var.service
