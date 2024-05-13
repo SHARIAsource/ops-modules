@@ -27,7 +27,7 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name        = "${var.key}-security-group-ec3-${var.environment}"
+    Name        = "${var.key}-security-group-ec2-${var.environment}"
     Environment = var.environment
     Project     = var.project
     Service     = var.service
