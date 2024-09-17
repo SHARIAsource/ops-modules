@@ -18,7 +18,7 @@ resource "aws_kms_key" "ssm_key" {
 }
 
 module "ssm_logs" {
-  source = "github.com/SHARIAsource/ops-modules//modules/bucket?ref=128eff74e34abd94ef3088f1268badacc5fc292f"
+  source = "..//bucket/"
 
   acl                      = "log-delivery-write"
   aws_account              = var.aws_account
