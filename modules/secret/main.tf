@@ -34,7 +34,7 @@ resource "aws_secretsmanager_secret" "this" {
   }
 
   tags = {
-    Name        = var.name
+    Name        = local.name
     Environment = var.environment
     Project     = var.project
     Service     = var.service
