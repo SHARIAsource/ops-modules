@@ -33,19 +33,7 @@ resource "aws_security_group" "this" {
 }
 
 locals {
-  launch_template           = "${var.key}-${var.name}-${var.environment}"
-  default_security_group_id = aws_security_group.this.id
-  network_interfaces = concat(
-    [
-      {
-        associate_public_ip_address = false
-        delete_on_termination       = true
-        security_groups             = [aws_security_group.this.id]
-        subnet_id                   = var.vpc_subnet_id
-      }
-    ],
-    var.network_interfaces == null ? [] : var.network_interfaces,
-  )
+  launch_template = "${var.key}-${var.name}-${var.environment}"
 }
 
 resource "aws_launch_template" "this" {
@@ -53,6 +41,7 @@ resource "aws_launch_template" "this" {
   image_id               = data.aws_ami.this.id
   instance_type          = var.instance_type
   update_default_version = var.update_default_version
+  vpc_security_group_ids = [aws_security_group.this.id]
 
   monitoring {
     enabled = var.monitoring
@@ -61,7 +50,7 @@ resource "aws_launch_template" "this" {
   # NOTE: There are multiple options here, we can add any as they become needed.
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#network-interfaces
   dynamic "network_interfaces" {
-    for_each = var.attach_security_group ? local.network_interfaces : var.network_interfaces
+    for_each = var.network_interfaces != null ? var.network_interfaces : []
     iterator = ni
 
     content {
