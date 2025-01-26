@@ -16,8 +16,6 @@ data "aws_ami" "this" {
 }
 
 resource "aws_security_group" "this" {
-  count = var.create_security_group ? 1 : 0
-
   description = "Security group for the ec2 instance."
   name_prefix = "${var.key}-security-group-ec2-${var.name}-${var.environment}-"
   vpc_id      = var.vpc_id
@@ -36,7 +34,18 @@ resource "aws_security_group" "this" {
 
 locals {
   launch_template           = "${var.key}-${var.name}-${var.environment}"
-  default_security_group_id = aws_security_group.this[0].id
+  default_security_group_id = aws_security_group.this.id
+  network_interfaces = concat(
+    [
+      {
+        associate_public_ip_address = false
+        delete_on_termination       = true
+        security_groups             = [aws_security_group.this.id]
+        subnet_id                   = var.vpc_subnet_id
+      }
+    ],
+    var.network_interfaces == null ? [] : var.network_interfaces,
+  )
 }
 
 resource "aws_launch_template" "this" {
@@ -52,13 +61,13 @@ resource "aws_launch_template" "this" {
   # NOTE: There are multiple options here, we can add any as they become needed.
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#network-interfaces
   dynamic "network_interfaces" {
-    for_each = var.network_interfaces
+    for_each = var.attach_security_group ? local.network_interfaces : var.network_interfaces
     iterator = ni
 
     content {
       associate_public_ip_address = ni.value.associate_public_ip_address
       delete_on_termination       = ni.value.delete_on_termination
-      security_groups             = try(ni.value.security_groups, [local.default_security_group_id])
+      security_groups             = try(ni.value.security_groups, [])
       subnet_id                   = try(ni.value.subnet_id, null)
     }
   }

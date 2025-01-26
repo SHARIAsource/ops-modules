@@ -23,6 +23,12 @@ variable "ami_owners" {
   default     = ["amazon"]
 }
 
+variable "attach_security_group" {
+  description = "Should the instance be registered with the module's security group."
+  type        = bool
+  default     = true
+}
+
 variable "create_security_group" {
   description = "Create a security group to house the instance."
   type        = bool
@@ -55,16 +61,6 @@ variable "monitoring" {
   default     = true
 }
 
-variable "network_interfaces" {
-  description = "Attach one or more network interfaces to the instance."
-  type = list(object({
-    associate_public_ip_address = bool,
-    delete_on_termination       = bool,
-    security_groups             = optional(list(string)),
-    subnet_id                   = optional(string),
-  }))
-}
-
 variable "metadata_options" {
   description = "Metadata configuration for the instance."
   type = object({
@@ -73,6 +69,17 @@ variable "metadata_options" {
     http_protocol_ipv6          = optional(string),
     instance_metadata_tags      = string
   })
+}
+
+variable "network_interfaces" {
+  description = "Attach one or more network interfaces to the instance."
+  type = list(object({
+    associate_public_ip_address = bool,
+    delete_on_termination       = bool,
+    security_groups             = optional(list(string)),
+    subnet_id                   = optional(string),
+  }))
+  default = null
 }
 
 variable "project" {
@@ -99,4 +106,10 @@ variable "update_default_version" {
 variable "vpc_id" {
   description = "Identifier for the VPC."
   type        = string
+}
+
+variable "vpc_subnet_id" {
+  description = "Provide a subnet for the default security group/network interface."
+  type        = string
+  default     = null
 }
