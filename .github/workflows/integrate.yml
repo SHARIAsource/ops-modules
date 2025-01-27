@@ -60,7 +60,8 @@ jobs:
       - name: tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
 
-      - uses: terraform-docs/gh-actions@v1.1.0
+      - name: tfdocs
+        uses: terraform-docs/gh-actions@v1.1.0
         with:
           find-dir: ${{ env.MODULES }}
           output-file: README.md
