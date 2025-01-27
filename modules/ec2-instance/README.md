@@ -34,7 +34,6 @@ No modules.
 | <a name="input_ami_most_recent"></a> [ami\_most\_recent](#input\_ami\_most\_recent) | If more than one ami result is returned, use the most recent. | `bool` | `true` | no |
 | <a name="input_ami_name_regex"></a> [ami\_name\_regex](#input\_ami\_name\_regex) | Regex for filtering down the ami data source. | `string` | n/a | yes |
 | <a name="input_ami_owners"></a> [ami\_owners](#input\_ami\_owners) | List of AMI owners for filtering down the ami data source | `list(string)` | <pre>[<br>  "amazon"<br>]</pre> | no |
-| <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Create a security group to house the instance. | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Identify the deployment environment. | `string` | n/a | yes |
 | <a name="input_iam_instance_profile_name"></a> [iam\_instance\_profile\_name](#input\_iam\_instance\_profile\_name) | The IAM Instance Profile to attach to the instance. | `string` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The type of the ec2 instance. | `string` | n/a | yes |
@@ -42,7 +41,7 @@ No modules.
 | <a name="input_metadata_options"></a> [metadata\_options](#input\_metadata\_options) | Metadata configuration for the instance. | <pre>object({<br>    http_endpoint               = string,<br>    http_put_response_hop_limit = number,<br>    http_protocol_ipv6          = optional(string),<br>    instance_metadata_tags      = string<br>  })</pre> | n/a | yes |
 | <a name="input_monitoring"></a> [monitoring](#input\_monitoring) | Should the EC2 instance have detailed monitoring enabled. | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the launch template. | `string` | n/a | yes |
-| <a name="input_network_interfaces"></a> [network\_interfaces](#input\_network\_interfaces) | Attach one or more network interfaces to the instance. | <pre>list(object({<br>    associate_public_ip_address = bool,<br>    delete_on_termination       = bool,<br>    security_groups             = optional(list(string)),<br>    subnet_id                   = optional(string),<br>  }))</pre> | n/a | yes |
+| <a name="input_network_interfaces"></a> [network\_interfaces](#input\_network\_interfaces) | Attach one or more network interfaces to the instance. | <pre>list(object({<br>    associate_public_ip_address = bool,<br>    delete_on_termination       = bool,<br>    security_groups             = optional(list(string)),<br>    subnet_id                   = optional(string),<br>  }))</pre> | `null` | no |
 | <a name="input_project"></a> [project](#input\_project) | The project key. | `string` | n/a | yes |
 | <a name="input_service"></a> [service](#input\_service) | The service key. | `string` | n/a | yes |
 | <a name="input_update_default_version"></a> [update\_default\_version](#input\_update\_default\_version) | Bump the default version of the instance on each update. | `bool` | `true` | no |
@@ -54,5 +53,5 @@ No modules.
 |------|-------------|
 | <a name="output_launch_template_id"></a> [launch\_template\_id](#output\_launch\_template\_id) | Identifier for the ec2 launch template. |
 | <a name="output_launch_template_latest_version"></a> [launch\_template\_latest\_version](#output\_launch\_template\_latest\_version) | Latest version of the ec2 launch template. |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Identifier for the ec2 instance's security group (if created). |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Identifier for the ec2 instance's security group. |
 <!-- END_TF_DOCS -->

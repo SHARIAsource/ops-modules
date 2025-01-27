@@ -11,6 +11,6 @@ output "launch_template_latest_version" {
 }
 
 output "security_group_id" {
-  description = "Identifier for the ec2 instance's security group (if created)."
-  value       = var.create_security_group ? aws_security_group.this.id : null
+  description = "Identifier for the ec2 instance's security group."
+  value       = aws_security_group.this.id
 }

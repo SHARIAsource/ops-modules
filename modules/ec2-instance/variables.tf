@@ -29,12 +29,6 @@ variable "attach_security_group" {
   default     = true
 }
 
-variable "create_security_group" {
-  description = "Create a security group to house the instance."
-  type        = bool
-  default     = true
-}
-
 variable "environment" {
   description = "Identify the deployment environment."
   type        = string
@@ -106,10 +100,4 @@ variable "update_default_version" {
 variable "vpc_id" {
   description = "Identifier for the VPC."
   type        = string
-}
-
-variable "vpc_subnet_id" {
-  description = "Provide a subnet for the default security group/network interface."
-  type        = string
-  default     = null
 }
